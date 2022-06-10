@@ -1,0 +1,265 @@
+﻿<Page
+    x:Class="LibraryWinUIApp.NovelsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:LibraryWinUIApp"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Models"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <local:EmptyStringConverter x:Key="EmptyStringConverter" />
+        <DataTemplate x:Key="BookListViewTemplate" x:DataType="models:NovelBookModel">
+
+            <Grid Margin="0,12,0,12" AutomationProperties.Name="{x:Bind ID}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Image MaxHeight="100" Stretch="Uniform">
+                    <Image.Source>
+                        <BitmapImage UriSource="{x:Bind ImageUrl, Converter={StaticResource EmptyStringConverter}, ConverterParameter='ms-appx:///Assets/StoreLogo.png'}" />
+                    </Image.Source>
+                </Image>
+                <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                    <TextBlock
+                        Margin="0,0,0,6"
+                        HorizontalAlignment="Left"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        LineHeight="20"
+                        Style="{ThemeResource BaseTextBlockStyle}"
+                        Text="{x:Bind Title}" />
+                    <TextBlock
+                        Width="350"
+                        FontFamily="Segoe UI"
+                        FontWeight="Normal"
+                        MaxLines="1"
+                        Style="{ThemeResource BodyTextBlockStyle}"
+                        Text="{x:Bind Author}"
+                        TextTrimming="CharacterEllipsis" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Left"
+                            Style="{ThemeResource CaptionTextBlockStyle}"
+                            Text="{x:Bind Year}" />
+
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            FontFamily="Segoe UI"
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Text=" ⋅ " />
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            HorizontalAlignment="Left"
+                            Style="{ThemeResource CaptionTextBlockStyle}"
+                            Text="{x:Bind Cost}" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+        </DataTemplate>
+
+
+    </Page.Resources>
+    <Grid>
+        <SplitView
+            DisplayMode="Inline"
+            IsPaneOpen="True"
+            OpenPaneLength="500"
+            PaneBackground="Transparent">
+            <SplitView.Pane>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Height="60">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+
+                            </Grid.ColumnDefinitions>
+                            <AppBarButton
+                                Grid.Column="0"
+                                HorizontalAlignment="Left"
+                                Click="AddButton_Click"
+                                Icon="Add"
+                                Label="Add" />
+                            <AppBarButton
+                                Grid.Column="1"
+                                HorizontalAlignment="Left"
+                                Click="RefreshButton_Click"
+                                Icon="Refresh"
+                                Label="Refresh" />
+                            <ProgressRing
+                                x:Name="LoadingProgressRing"
+                                Grid.Column="2"
+                                Width="32"
+                                HorizontalAlignment="Left"
+                                IsActive="False" />
+                            <TextBlock
+                                x:Name="TotalTextBlock"
+                                Grid.Column="3"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Style="{ThemeResource BaseTextBlockStyle}">
+                                Total: 0
+                            </TextBlock>
+                        </Grid>
+
+                    </Border>
+
+                    <ListView
+                        x:Name="BookListView"
+                        Grid.Row="1"
+                        MinHeight="250"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        ItemTemplate="{StaticResource BookListViewTemplate}"
+                        SelectionMode="Single"
+                        Tapped="BookListView_Tapped">
+                        <ListView.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <ContentThemeTransition />
+                            </TransitionCollection>
+                        </ListView.ItemContainerTransitions>
+
+                    </ListView>
+                </Grid>
+
+            </SplitView.Pane>
+
+            <Border
+                Grid.Column="1"
+                Height="Auto"
+                Margin="8,8,8,8"
+                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="8">
+                <Grid Margin="12,12,12,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Orientation="Vertical">
+                        <Image
+                            Width="200"
+                            Height="400"
+                            Stretch="Uniform">
+                            <Image.Source>
+                                <BitmapImage UriSource="{x:Bind SelectedBook.Book.ImageUrl, Mode=OneWay, Converter={StaticResource EmptyStringConverter}, ConverterParameter='ms-appx:///Assets/StoreLogo.png'}" />
+                            </Image.Source>
+                        </Image>
+                        <Grid>
+                            <TextBlock HorizontalAlignment="Left" Style="{ThemeResource BaseTextBlockStyle}">
+                                ISBN:
+                            </TextBlock>
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                Text="{x:Bind SelectedBook.Book.ISBN, Mode=OneWay}" />
+                        </Grid>
+                        <Grid>
+                            <TextBlock HorizontalAlignment="Left" Style="{ThemeResource BaseTextBlockStyle}">
+                                Cost:
+                            </TextBlock>
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                Text="{x:Bind SelectedBook.Book.Cost.ToString(), Mode=OneWay}" />
+                        </Grid>
+                        <Grid>
+                            <TextBlock HorizontalAlignment="Left" Style="{ThemeResource BaseTextBlockStyle}">
+                                Date Modified:
+                            </TextBlock>
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                Text="{x:Bind SelectedBook.Book.LastModified.ToLongDateString(), Mode=OneWay}" />
+                        </Grid>
+                        <Grid>
+                            <TextBlock HorizontalAlignment="Left" Style="{ThemeResource BaseTextBlockStyle}">
+                                Pages:
+                            </TextBlock>
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                Text="{x:Bind SelectedBook.Book.(models:NovelBookModel.Pages), Mode=OneWay}" />
+                        </Grid>
+
+                        <Border
+                            Height="Auto"
+                            Margin="15,20,15,8"
+                            Background="{ThemeResource LayerFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8">
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                <Button
+                                    x:Name="EditButton"
+                                    Width="120"
+                                    Margin="5"
+                                    Click="EditButton_Click"
+                                    IsEnabled="False">
+                                    ✏️Edit
+                                </Button>
+                                <Button
+                                    x:Name="DeleteButton"
+                                    Width="120"
+                                    Margin="5"
+                                    Click="DeleteButton_Click"
+                                    IsEnabled="False">
+                                    🗑️Delete
+                                </Button>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Vertical">
+
+
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                Style="{ThemeResource BaseTextBlockStyle}"
+                                Text="{x:Bind SelectedBook.Book.Title, Mode=OneWay}" />
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                Style="{ThemeResource BaseTextBlockStyle}"
+                                Text="{x:Bind SelectedBook.Book.Author, Mode=OneWay}" />
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                Style="{ThemeResource BaseTextBlockStyle}"
+                                Text="{x:Bind SelectedBook.Book.Year.ToString(), Mode=OneWay}" />
+                        </StackPanel>
+
+
+                        <StackPanel Margin="0,15,0,0" Orientation="Vertical">
+                            <TextBlock HorizontalAlignment="Left" Style="{ThemeResource BaseTextBlockStyle}">Description</TextBlock>
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                Text="{x:Bind SelectedBook.Book.Description, Mode=OneWay}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                </Grid>
+            </Border>
+
+
+        </SplitView>
+
+    </Grid>
+</Page>

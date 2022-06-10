@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="LibraryMAUIApp.BookPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodel="clr-namespace:LibraryMAUIApp.ViewModel"
+    Title="{Binding Title}"
+    x:DataType="viewmodel:BookViewModel">
+    <StackLayout>
+        <Label
+            Margin="10"
+            HorizontalOptions="Center"
+            Text="{Binding Title}"
+            VerticalOptions="Center" />
+        <Label
+            Margin="10"
+            HorizontalOptions="Center"
+            Text="{Binding Author}"
+            VerticalOptions="Center" />
+        <Image
+            Margin="0,10,0,0"
+            Aspect="Center"
+            MinimumHeightRequest="50"
+            MinimumWidthRequest="300"
+            Source="{Binding Imageurl}" />
+        <Label
+            Margin="10"
+            HorizontalOptions="Center"
+            Text="{Binding Year}"
+            VerticalOptions="Center" />
+        <Label
+            Margin="10"
+            HorizontalOptions="Center"
+            Text="{Binding Description}"
+            VerticalOptions="Center" />
+        <Button
+            Command="{Binding ReserveCommand}"
+            Text="Reserve"
+            WidthRequest="300" />
+    </StackLayout>
+</ContentPage>

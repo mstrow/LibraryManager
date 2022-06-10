@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="LibraryMAUIApp.NovelsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:Models;assembly=Models"
+    xmlns:viewmodel="clr-namespace:LibraryMAUIApp.ViewModel"
+    Title="Novels "
+    x:DataType="viewmodel:BooksViewModel">
+    <ContentPage.Resources>
+        <DataTemplate x:Key="BookCollectionViewTemplate" x:DataType="models:NovelBookModel">
+            <Grid Margin="3">
+                <Frame>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BooksViewModel}}, Path=TapCommand}" CommandParameter="{Binding .}" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Horizontal">
+                        <Image
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="0,10,0,0"
+                            Aspect="Center"
+                            MinimumHeightRequest="50"
+                            MinimumWidthRequest="300"
+                            Source="{Binding ImageUrl}" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="25" />
+                                <RowDefinition Height="25" />
+                                <RowDefinition Height="25" />
+                                <RowDefinition Height="25" />
+                            </Grid.RowDefinitions>
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                FontSize="14"
+                                LineHeight="20"
+                                Text="{Binding Title}" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                FontFamily="Segoe UI"
+                                MaxLines="1"
+                                Text="{Binding Author}" />
+                            <Label
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Text="{Binding Year}" />
+
+                            <Label
+                                Grid.Row="4"
+                                Grid.Column="1"
+                                Text="{Binding Cost, StringFormat='$\{0\}'}" />
+                        </Grid>
+                    </StackLayout>
+
+                </Frame>
+            </Grid>
+        </DataTemplate>
+
+    </ContentPage.Resources>
+    <Grid>
+        <CollectionView
+            x:Name="BooksCollectionView"
+            ItemTemplate="{StaticResource BookCollectionViewTemplate}"
+            SelectionMode="None" />
+    </Grid>
+
+</ContentPage>

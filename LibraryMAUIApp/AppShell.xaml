@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="LibraryMAUIApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:LibraryMAUIApp"
+    Shell.FlyoutBehavior="Flyout">
+
+    <ShellContent
+        Title="Novels"
+        ContentTemplate="{DataTemplate local:NovelsPage}"
+        Route="NovelsPage" />
+
+    <ShellContent
+        Title="Magazines"
+        ContentTemplate="{DataTemplate local:MagazinesPage}"
+        Route="MagazinesPage" />
+
+    <ShellContent
+        Title="Picture Books"
+        ContentTemplate="{DataTemplate local:PictureBooksPage}"
+        Route="PictureBooksPage" />
+
+</Shell>
